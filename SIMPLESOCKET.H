@@ -17,9 +17,11 @@
 #ifndef SIMPLESOCKET_H_
 #define SIMPLESOCKET_H_
 
+#include "TASK3.H"
 #include <string>
 #include <arpa/inet.h> //inet_addr
 
+using namespace TASK3;
 
 using namespace std;
 
@@ -150,6 +152,19 @@ private:
 	string response(string incomingMsg);
 
 };
+class MyTCPserver :public TCPserver
+{
+	public:
+
+	MyTCPserver(int port, int maxDataSizeRecv);
+
+
+	protected:
+	World *w;
+	string myResponse(string input);
+
+};
+
 
 
 
