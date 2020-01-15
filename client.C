@@ -8,20 +8,31 @@
 #include <string>
 #include <iostream>
 #include <unistd.h> //contains various constants
-
+#include <sstream>
 #include "SIMPLESOCKET.H"
-
+#include "TASK3.H"
 using namespace std;
+
+
+string coordStr(int x, int y){
+	std::stringstream ss;
+	ss<<"COORD["<< x <<","<< y <<"]";
+	return ss.str();
+}
+
+
 
 int main() {
 	srand(time(NULL));
 	TCPclient c;
 	string host = "localhost";
 	string msg;
+	int x=0,y=0,r;
+	int nmbShoots = 0;
 
 	//connect to host
-	c.conn(host , 2021);
-
+	c.conn(host , 2025);
+/*
 	int i=0;
 	bool goOn=1;
 	while(goOn){ // send and receive data
@@ -30,14 +41,72 @@ int main() {
 			goOn = 0;
 		}else{
 			msg = string("client wants this");
-		}
-		cout << "client sends:" << msg << endl;
+		}*/
+
+		//cout << "client sends:" << msg << endl;
+
+		/*		for (int i=0;i<5;i++){
+		c.sendData(string("NEWGAME"));
+		msg = c.receive(32);
+		nmbShoots=0;
+
+		while(1){
+		x = (rand()%10) + 1;
+		y = (rand()%10) + 1;
+		msg =coordStr(x,y);
 		c.sendData(msg);
 		msg = c.receive(32);
-		cout << "got response:" << msg << endl;
-		sleep(1);
+
+		if(1 != sscanf(msg.c_str(),"RES[%d]",&r)){
+			cout << "unkown response:" << msg << endl;
+
+		}
+		else{
+			nmbShoots=nmbShoots+1;
+			}
+		if(r == TASK3::GAME_OVER) break;
+		}
+
+		cout << ""<<nmbShoots << endl;
+
+
+		}*/
+
+		for (int i=0;i<1000;i++){
+			c.sendData(string("NEWGAME"));
+			msg = c.receive(32);
+			nmbShoots=0;
+
+				for(x=1;x<=10;x++)
+				{
+					for(y=1;y<=10;y++)
+					{
+
+						msg =coordStr(x,y);
+						c.sendData(msg);
+						msg = c.receive(32);
+						nmbShoots=nmbShoots+1;
+						if(1 != sscanf(msg.c_str(),"RES[%d]",&r)){
+							cout << "unkown response:" << msg << endl;
+						}
+						if(r == TASK3::GAME_OVER) break;
+					}
+
+
+				}
+
+
+
+			cout << ""<<nmbShoots << endl;
+
+
+		}
+
+		c.sendData(string("BYEBYE"));
+		msg = c.receive(32);
+		cout << "unkown response:" << msg << endl;
 
 	}
-}
+
 
 
